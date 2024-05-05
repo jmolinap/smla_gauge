@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: #fff;
+            width: 380px;
+            height: 150px;
+            clear: both;
+        }
+
+        #preview-textfield {
+            position: absolute;
+            top: 105px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 1em;
+            color: black;
+            font-family: 'Amaranth', sans-serif;
+        }
+
+        #demo {
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="preview">
+        <canvas width="380" height="200" id="chart" style="width: 380px; height: 150px;"></canvas>
+        <div id="preview-textfield" style="font-size: 24px;">
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gauge.js/1.3.2/gauge.min.js"></script>
+    <script>
+        const createGauge = function ({ gaugeContainerId, textContainerId, data }) {
+            const MIN_VALUE = 0;
+            const MAX_VALUE = 5;
+            let score = data.score;
+            let level = data.level;
+            let opts = {
+                angle: -0.2, // The span of the gauge arc
+                lineWidth: 0.2, // The line thickness
+                radiusScale: 1, // Relative radius
+                pointer: {
+                    length: 0.4, // // Relative to gauge radius
+                    strokeWidth: 0.04, // The thickness
+                    color: '#000000' // Fill color
+                },
+                limitMax: true,     // If false, max value increases automatically if value > maxValue
+                limitMin: true,     // If true, the min value of the gauge will be fixed
+                strokeColor: '#EEEEEE',  // to see which ones work best for you
+                highDpiSupport: true,     // High resolution support
+            };
+            if (score <= MAX_VALUE) {
+                opts.staticZones = [
+                    { strokeStyle: "#51f542", min: 0, max: 2.4, height: 1 },
+                    { strokeStyle: "#d6d01e", min: 2.4, max: 4, height: 1 },
+                    { strokeStyle: "#db1b0d", min: 4, max: 5, height: 1 },
+                ];
+            }
+            else {
+                opts.colorStop = '#ed07e5';
+                opts.strokeColor = '#eeeeee';
+            }
+            let target = document.getElementById(gaugeContainerId); // your canvas element
+            let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+            gauge.minValue = MIN_VALUE;  // Prefer setter over gauge.minValue = 0
+            gauge.maxValue = MAX_VALUE; // set max gauge value
+            document.getElementById(textContainerId).textContent = score.toFixed(2);
+            /*if (score > MAX_VALUE) {
+                score = MAX_VALUE;
+            }*/
+            gauge.set(score.toFixed(2)); // set actual value
+            return gauge;
+        }
+        $(document).ready(async function () {
+            const gaugeContainerId = "chart";
+            const textContainerId = "preview-textfield";
+            createGauge({
+                gaugeContainerId: gaugeContainerId,
+                textContainerId: textContainerId,
+                data: {
+                    score: 0,
+                    label: "",
+                }
+            });
+
+
+            const url = 'https://script.google.com/macros/s/AKfycbxuywF-UpZaw6bJtmmCD5go8kc4xQNbHopoGraHhoJSh-20B5fOWGnY9t_FF2qwyKKhaA/exec?view=get-live-data';
+            const response = await fetch(url);
+            if (!response.ok) {
+                return;
+            }
+            const data = await response.json();
+            createGauge({
+                gaugeContainerId,
+                textContainerId,
+                data
+            });
+        });
+    </script>
+</body>
+
+</html>
