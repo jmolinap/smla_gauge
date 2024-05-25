@@ -62,8 +62,8 @@
             };
             if (score <= MAX_VALUE) {
                 opts.staticZones = [
-                    { strokeStyle: "#51f542", min: 0, max: 2.4, height: 1 },
-                    { strokeStyle: "#d6d01e", min: 2.4, max: 4, height: 1 },
+                    { strokeStyle: "#51f542", min: 0, max: 2.5, height: 1 },
+                    { strokeStyle: "#d6d01e", min: 2.51, max: 4, height: 1 },
                     { strokeStyle: "#db1b0d", min: 4, max: 5, height: 1 },
                 ];
             }
@@ -75,11 +75,11 @@
             let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
             gauge.minValue = MIN_VALUE;  // Prefer setter over gauge.minValue = 0
             gauge.maxValue = MAX_VALUE; // set max gauge value
-            document.getElementById(textContainerId).textContent = score.toFixed(2);
+            document.getElementById(textContainerId).textContent = score.toFixed(1);
             /*if (score > MAX_VALUE) {
                 score = MAX_VALUE;
             }*/
-            gauge.set(score.toFixed(2)); // set actual value
+            gauge.set(score.toFixed(1)); // set actual value
             return gauge;
         }
         $(document).ready(async function () {
