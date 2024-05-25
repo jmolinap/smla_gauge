@@ -60,22 +60,32 @@
                 strokeColor: '#EEEEEE',  // to see which ones work best for you
                 highDpiSupport: true,     // High resolution support
             };
+            const colors = {
+                '': '#000',
+                'highest': '#ff00ff',
+                'high': '#ff0000',
+                'moderate': '#ffff00',
+                'lower': '#00ff00',
+            }
             if (score <= MAX_VALUE) {
                 opts.staticZones = [
-                    { strokeStyle: "#51f542", min: 0, max: 2.5, height: 1 },
-                    { strokeStyle: "#d6d01e", min: 2.51, max: 4, height: 1 },
-                    { strokeStyle: "#db1b0d", min: 4, max: 5, height: 1 },
+                    { strokeStyle: colors.lower, min: 0, max: 2.5, height: 1 },
+                    { strokeStyle: colors.moderate, min: 2.51, max: 4, height: 1 },
+                    { strokeStyle: colors.high, min: 4, max: 5, height: 1 },
                 ];
             }
             else {
-                opts.colorStop = '#ed07e5';
+                opts.colorStop = colors.highest;
                 opts.strokeColor = '#eeeeee';
             }
             let target = document.getElementById(gaugeContainerId); // your canvas element
             let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
             gauge.minValue = MIN_VALUE;  // Prefer setter over gauge.minValue = 0
             gauge.maxValue = MAX_VALUE; // set max gauge value
-            document.getElementById(textContainerId).textContent = score.toFixed(1);
+            const scoreValue = $("<span>").text(score.toFixed(1));
+            const scoreLabel = $("<span>").text(level || "").css("color", colors[(level || "").toLowerCase()]);
+            const scoreBlock = $("<div>").append(scoreValue).append("<br/>").append(scoreLabel);
+            $("#" + textContainerId).empty().append(scoreBlock);
             /*if (score > MAX_VALUE) {
                 score = MAX_VALUE;
             }*/
