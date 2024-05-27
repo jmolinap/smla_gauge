@@ -21,10 +21,22 @@
             left: 0;
             right: 0;
             text-align: center;
-            font-size: 1em;
             color: black;
-            font-family: 'Amaranth', sans-serif;
+            font-family: 'Arial', sans-serif;
         }
+
+        .score-value {
+            font-size: 1.45rem;
+        }
+
+        .score-label {
+            font-size: 2.35rem;
+            padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            max-width: 380px;
+        }
+
 
         #demo {
             clear: both;
@@ -45,7 +57,7 @@
             const MIN_VALUE = 0;
             const MAX_VALUE = 5;
             let score = data.score;
-            let level = data.level;
+            let level = data.level || "";
             let opts = {
                 angle: -0.2, // The span of the gauge arc
                 lineWidth: 0.2, // The line thickness
@@ -66,7 +78,14 @@
                 'high': '#ff0000',
                 'moderate': '#ffff00',
                 'lower': '#00ff00',
-            }
+            };
+            const fontColors = {
+                '': '#000',
+                'highest': '#fff',
+                'high': '#fff',
+                'moderate': '#000',
+                'lower': '#000',
+            };
             if (score <= MAX_VALUE) {
                 opts.staticZones = [
                     { strokeStyle: colors.lower, min: 0, max: 2.5, height: 1 },
@@ -78,13 +97,19 @@
                 opts.colorStop = colors.highest;
                 opts.strokeColor = '#eeeeee';
             }
+
             let target = document.getElementById(gaugeContainerId); // your canvas element
             let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
             gauge.minValue = MIN_VALUE;  // Prefer setter over gauge.minValue = 0
             gauge.maxValue = MAX_VALUE; // set max gauge value
-            const scoreValue = $("<span>").text(score.toFixed(1));
-            const scoreLabel = $("<span>").text(level || "").css("color", colors[(level || "").toLowerCase()]);
-            const scoreBlock = $("<div>").append(scoreValue).append("<br/>").append(scoreLabel);
+            const scoreValue = $("<span>").text(score.toFixed(1)).addClass("score-value");
+            const scoreLabel = $("<span>").text(level);
+            let scoreLabelContainer = $("<span>").addClass("score-label").css("background", colors[level.toLowerCase()]).css("color", fontColors[level.toLowerCase()]);
+            scoreLabelContainer.append(scoreLabel);
+            if (!level) {
+                scoreLabelContainer = $("<div>");
+            }
+            const scoreBlock = $("<div>").append(scoreValue).append($("<div>").css("margin-top", "2.5rem")).append(scoreLabelContainer);
             $("#" + textContainerId).empty().append(scoreBlock);
             /*if (score > MAX_VALUE) {
                 score = MAX_VALUE;
