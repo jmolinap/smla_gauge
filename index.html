@@ -63,6 +63,9 @@
             const MAX_VALUE = 5;
             let score = data.score;
             let level = data.level || "";
+            if (score >= MAX_VALUE) {
+                score = MAX_VALUE;
+            }
             let opts = {
                 angle: -0.2, // The span of the gauge arc
                 lineWidth: 0.2, // The line thickness
@@ -83,7 +86,6 @@
                 'high': '#ff0000',
                 'moderate': '#ffff00',
                 'lower': '#00ff00',
-
             };
             const fontColors = {
                 '': '#000',
@@ -92,7 +94,7 @@
                 'moderate': '#000',
                 'lower': '#000',
             };
-            if (score <= MAX_VALUE) {
+            if (score < MAX_VALUE) {
                 opts.staticZones = [
                     { strokeStyle: colors.lower, min: 0, max: 2.5, height: 1 },
                     { strokeStyle: colors.moderate, min: 2.51, max: 4, height: 1 },
@@ -123,9 +125,6 @@
             }
             scoreBlock.append(logoContainer);
             $("#" + textContainerId).empty().append(scoreBlock);
-            if (score >= MAX_VALUE) {
-                score = MAX_VALUE;
-            }
             gauge.set(score.toFixed(1)); // set actual value
             return gauge;
         }
