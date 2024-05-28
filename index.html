@@ -113,8 +113,8 @@
             const scoreValue = $("<span>").text(score.toFixed(1)).addClass("score-value");
             const scoreLabel = $("<span>").text(level);
             let scoreLabelContainer = $("<span>").addClass("score-label").css("background", colors[level.toLowerCase()]).css("color", fontColors[level.toLowerCase()]);
-            const logo = $("<img>").attr("id", "logo-container").attr("src", "./logo.png").attr("width", "96px");
-            const logoContainer = $("<div>").append(logo);
+            /*const logo = $("<img>").attr("id", "logo-container").attr("src", "./logo.png").attr("width", "96px");
+            const logoContainer = $("<div>").append(logo);*/
             scoreLabelContainer.append(scoreLabel);
             if (!level) {
                 scoreLabelContainer = $("<div>");
@@ -123,7 +123,7 @@
             if (level) {
                 scoreBlock.append($("<div>").css("margin-top", "2.5rem")).append(scoreLabelContainer);
             }
-            scoreBlock.append(logoContainer);
+            //scoreBlock.append(logoContainer);
             $("#" + textContainerId).empty().append(scoreBlock);
             gauge.set(score.toFixed(1)); // set actual value
             return gauge;
