@@ -46,6 +46,10 @@
         #demo {
             clear: both;
         }
+
+        .smoke-health-label {
+            margin-top: 1.5rem;
+        }
     </style>
 </head>
 
@@ -112,8 +116,8 @@
             gauge.maxValue = MAX_VALUE; // set max gauge value
             const scoreValue = $("<span>").html("&nbsp").addClass("score-value");
             const scoreLabel = $("<span>").text(level);
-            const smokeHealthDangerLabel = $("<span>").text("Smoke Health Danger");
             let scoreLabelContainer = $("<span>").addClass("score-label").css("background", colors[level.toLowerCase()]).css("color", fontColors[level.toLowerCase()]);
+            const smokeHealthDangerLabel = $("<div>").text("Smoke Health Danger").addClass("smoke-health-label");
             /*const logo = $("<img>").attr("id", "logo-container").attr("src", "./logo.png").attr("width", "96px");
             const logoContainer = $("<div>").append(logo);*/
             scoreLabelContainer.append(scoreLabel);
@@ -125,7 +129,9 @@
                 scoreBlock.append($("<div>").css("margin-top", "2.5rem")).append(scoreLabelContainer);
             }
             //scoreBlock.append(logoContainer);
-            scoreBlock.append(smokeHealthDangerLabel);
+            if (level) {
+                scoreBlock.append(smokeHealthDangerLabel);
+            }
             $("#" + textContainerId).empty().append(scoreBlock);
             gauge.set(score.toFixed(1)); // set actual value
             return gauge;
