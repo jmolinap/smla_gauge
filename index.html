@@ -110,7 +110,7 @@
             let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
             gauge.minValue = MIN_VALUE;  // Prefer setter over gauge.minValue = 0
             gauge.maxValue = MAX_VALUE; // set max gauge value
-            const scoreValue = $("<span>").text(score.toFixed(1)).addClass("score-value");
+            const scoreValue = $("<span>").html("&nbsp;").addClass("score-value");
             const scoreLabel = $("<span>").text(level);
             let scoreLabelContainer = $("<span>").addClass("score-label").css("background", colors[level.toLowerCase()]).css("color", fontColors[level.toLowerCase()]);
             /*const logo = $("<img>").attr("id", "logo-container").attr("src", "./logo.png").attr("width", "96px");
