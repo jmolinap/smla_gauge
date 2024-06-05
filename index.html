@@ -21,10 +21,10 @@
         }
 
         #preview-textfield {
-            position: absolute;
+            /*position: absolute;
             top: 105px;
             left: 0;
-            right: 0;
+            right: 0;*/
             text-align: center;
             color: black;
             font-family: 'Arial', sans-serif;
@@ -39,7 +39,15 @@
             padding: 0.5rem 1.5rem 0.5rem 1.5rem;
             border-radius: 10px;
             border: none;
-            max-width: 380px;
+            max-width: 50%;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            /*margin-top: 1.5rem;*/
+        }
+
+        .hide {
+            display: none;
         }
 
 
@@ -48,7 +56,20 @@
         }
 
         .smoke-health-label {
-            margin-top: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .protect-yourself-button {
+            font-size: 1.1rem;
+            background-color: #ff00ff;
+            text-decoration: none;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem 0.5rem 1rem 0.5rem;
+            margin-top: 1rem;
+            margin-left: auto;
+            margin-right: auto;
+            width: 63%;
         }
     </style>
 </head>
@@ -57,6 +78,12 @@
     <div id="preview">
         <canvas width="250" height="163" id="chart" style="width: 250px; height: 163px;"></canvas>
         <div id="preview-textfield">
+            <div id="score-container"></div>
+            <div>
+                <a id="protect-yourself-button" class="protect-yourself-button hide" target="_top"
+                    href="https://raycheung4.wixsite.com/wildfire/protect" class="protect-yourself">
+                    Protect Yourself</a>
+            </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -109,36 +136,32 @@
                 opts.colorStop = colors.highest;
                 opts.strokeColor = '#eeeeee';
             }
-
             let target = document.getElementById(gaugeContainerId); // your canvas element
             let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
             gauge.minValue = MIN_VALUE;  // Prefer setter over gauge.minValue = 0
             gauge.maxValue = MAX_VALUE; // set max gauge value
-            const scoreValue = $("<span>").html("&nbsp").addClass("score-value");
-            const scoreLabel = $("<span>").text(level);
-            let scoreLabelContainer = $("<span>").addClass("score-label").css("background", colors[level.toLowerCase()]).css("color", fontColors[level.toLowerCase()]);
-            const smokeHealthDangerLabel = $("<div>").text("Smoke Health Danger").addClass("smoke-health-label");
-            /*const logo = $("<img>").attr("id", "logo-container").attr("src", "./logo.png").attr("width", "96px");
-            const logoContainer = $("<div>").append(logo);*/
-            scoreLabelContainer.append(scoreLabel);
+            const scoreLabel = level;
+            let scoreLabelContainer = $("<div>").addClass("score-label").css("background", colors[level.toLowerCase()]).css("color", fontColors[level.toLowerCase()]);
+            const smokeHealthDangerLabel = $("<div>").addClass("smoke-health-label").text("Smoke Health Danger");
+            scoreLabelContainer.text(scoreLabel);
             if (!level) {
                 scoreLabelContainer = $("<div>");
             }
-            const scoreBlock = $("<div>").append(scoreValue);
+            const scoreBlock = $("#" + textContainerId).empty();
             if (level) {
-                scoreBlock.append($("<div>").css("margin-top", "2.5rem")).append(scoreLabelContainer);
-            }
-            //scoreBlock.append(logoContainer);
-            if (level) {
+                scoreBlock.append(scoreLabelContainer);
                 scoreBlock.append(smokeHealthDangerLabel);
             }
-            $("#" + textContainerId).empty().append(scoreBlock);
+
+            if (score >= MAX_VALUE) {
+                $("#protect-yourself-button").removeClass("hide").css("display", "block");
+            }
             gauge.set(score.toFixed(1)); // set actual value
             return gauge;
         }
         $(document).ready(async function () {
             const gaugeContainerId = "chart";
-            const textContainerId = "preview-textfield";
+            const textContainerId = "score-container";
             createGauge({
                 gaugeContainerId: gaugeContainerId,
                 textContainerId: textContainerId,
