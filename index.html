@@ -11,7 +11,7 @@
             left: 0;
             color: #fff;
             width: 250px;
-            height: 163px;
+            height: 183px;
             clear: both;
         }
 
@@ -70,11 +70,19 @@
             margin-right: auto;
             width: 63%;
         }
+
+        #timestamp {
+            font-family: Arial, Helvetica, sans-serif;
+            color: black;
+            font-size: 1.5rem;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
     <div id="preview">
+        <div id="timestamp" style="color: black;"></div>
         <canvas width="250" height="163" id="chart" style="width: 250px; height: 163px;"></canvas>
         <div id="preview-textfield">
             <div id="score-container"></div>
@@ -156,7 +164,16 @@
             gauge.set(score.toFixed(1)); // set actual value
             return gauge;
         }
+
+        const formatDate = function (dt) {
+            const time = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Los_Angeles' });
+            return dt.getMonth() + "." + dt.getDate() + "." + (dt.getFullYear() - 2000) + " " + time;
+        }
+
         $(document).ready(async function () {
+            const dt = new Date();
+            $("#timestamp").text(formatDate(dt));
+
             const gaugeContainerId = "chart";
             const textContainerId = "score-container";
             createGauge({
