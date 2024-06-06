@@ -66,7 +66,6 @@
             border: none;
             border-radius: 10px;
             padding: 1rem 0.5rem 1rem 0.5rem;
-            margin-top: 1rem;
             margin-left: auto;
             margin-right: auto;
             width: 63%;
@@ -142,15 +141,13 @@
             gauge.maxValue = MAX_VALUE; // set max gauge value
             const scoreLabel = level;
             let scoreLabelContainer = $("<div>").addClass("score-label").css("background", colors[level.toLowerCase()]).css("color", fontColors[level.toLowerCase()]);
-            const smokeHealthDangerLabel = $("<div>").addClass("smoke-health-label").text("Smoke Health Danger");
             scoreLabelContainer.text(scoreLabel);
             if (!level) {
                 scoreLabelContainer = $("<div>");
             }
             const scoreBlock = $("#" + textContainerId).empty();
-            if (level) {
+            if (level && score < MAX_VALUE) {
                 scoreBlock.append(scoreLabelContainer);
-                scoreBlock.append(smokeHealthDangerLabel);
             }
 
             if (score >= MAX_VALUE) {
