@@ -166,7 +166,7 @@
         }
 
         const formatDate = function (dt) {
-            const time = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Los_Angeles' });
+            const time = dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' });
             return (dt.getMonth() + 1) + "." + dt.getDate() + "." + (dt.getFullYear() - 2000) + " " + time;
         }
 
