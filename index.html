@@ -85,7 +85,7 @@
     <base target="_top" />
     <div id="preview">
         <div id="timestamp" style="color: black;"></div>
-        <canvas width="275" height="163" id="chart" style="width: 275px; height: 163px;"></canvas>
+        <canvas width="275" height="163" id="chart" style="width: 250px; height: 163px;"></canvas>
         <div id="preview-textfield">
             <div id="score-container"></div>
             <div>
@@ -103,6 +103,15 @@
             const MAX_VALUE = 5;
             let score = data.score;
             let level = data.level || "";
+            let languageLabels = data.labels || {};
+            let label = level;
+            if (languageLabels) {
+                const searchParams = new URLSearchParams(window.location.search);
+                const lang = searchParams.get("lang");
+                if (languageLabels[lang] && languageLabels[lang][level]) {
+                    label = languageLabels[lang][level];
+                }
+            }
             if (score >= MAX_VALUE) {
                 score = MAX_VALUE;
             }
@@ -149,7 +158,7 @@
             let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
             gauge.minValue = MIN_VALUE;  // Prefer setter over gauge.minValue = 0
             gauge.maxValue = MAX_VALUE; // set max gauge value
-            const scoreLabel = level;
+            const scoreLabel = label;
             let scoreLabelContainer = $("<div>").addClass("score-label").css("background", colors[level.toLowerCase()]).css("color", fontColors[level.toLowerCase()]);
             scoreLabelContainer.text(scoreLabel);
             if (!level) {
