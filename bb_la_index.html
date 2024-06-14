@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: #fff;
+            width: 275px;
+            height: 183px;
+            clear: both;
+        }
+
+        #logo-container {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        #preview-textfield {
+            /*position: absolute;
+            top: 105px;
+            left: 0;
+            right: 0;*/
+            text-align: center;
+            color: black;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .score-value {
+            font-size: 1.45rem;
+        }
+
+        .score-label {
+            font-size: 1.45rem;
+            padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            max-width: 50%;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            /*margin-top: 1.5rem;*/
+        }
+
+        .hide {
+            display: none;
+        }
+
+
+        #demo {
+            clear: both;
+        }
+
+        .smoke-health-label {
+            margin-top: 1rem;
+        }
+
+        .protect-yourself-button {
+            font-size: 1.5rem;
+            background-color: #890997;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem 0.5rem 1rem 0.5rem;
+            margin-left: auto;
+            margin-right: auto;
+            width: 75%;
+        }
+
+        #timestamp {
+            font-family: Arial, Helvetica, sans-serif;
+            color: gray;
+            font-size: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <base target="_top" />
+    <div id="preview">
+        <div id="timestamp" style="color: black;"></div>
+        <canvas width="275" height="163" id="chart" style="width: 275px; height: 163px;"></canvas>
+        <div id="preview-textfield">
+            <div id="score-container"></div>
+            <div>
+                <a id="protect-yourself-button" class="protect-yourself-button hide" target="_top"
+                    href="https://raycheung4.wixsite.com/wildfire/protect" class="protect-yourself">
+                    Protect Yourself</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gauge.js/1.3.2/gauge.min.js"></script>
+    <script>
+        const createGauge = function ({ gaugeContainerId, textContainerId, data }) {
+            const MIN_VALUE = 0;
+            const MAX_VALUE = 5;
+            let score = data.score;
+            let level = data.level || "";
+            let languageLabels = data.labels || {};
+            let label = level;
+            if (languageLabels) {
+                const searchParams = new URLSearchParams(window.location.search);
+                const lang = searchParams.get("lang");
+                if (languageLabels[lang] && languageLabels[lang][level]) {
+                    label = languageLabels[lang][level];
+                }
+            }
+            if (score >= MAX_VALUE) {
+                score = MAX_VALUE;
+            }
+            let opts = {
+                angle: -0.2, // The span of the gauge arc
+                lineWidth: 0.2, // The line thickness
+                radiusScale: 1, // Relative radius
+                pointer: {
+                    length: 0.4, // // Relative to gauge radius
+                    strokeWidth: 0.04, // The thickness
+                    color: '#000000' // Fill color
+                },
+                limitMax: true,     // If false, max value increases automatically if value > maxValue
+                limitMin: true,     // If true, the min value of the gauge will be fixed
+                strokeColor: '#EEEEEE',  // to see which ones work best for you
+                highDpiSupport: true,     // High resolution support
+            };
+            const colors = {
+                '': '#000',
+                'highest': '#890997',
+                'high': '#ff0000',
+                'moderate': '#ffff00',
+                'lower': '#00ff00',
+            };
+            const fontColors = {
+                '': '#000',
+                'highest': '#fff',
+                'high': '#fff',
+                'moderate': '#000',
+                'lower': '#000',
+            };
+            if (score < MAX_VALUE) {
+                opts.staticZones = [
+                    { strokeStyle: colors.lower, min: 0, max: 2.5, height: 1 },
+                    { strokeStyle: colors.moderate, min: 2.51, max: 4, height: 1 },
+                    { strokeStyle: colors.high, min: 4.01, max: 5, height: 1 },
+                ];
+            }
+            else {
+                opts.colorStop = colors.highest;
+                opts.strokeColor = '#eeeeee';
+            }
+            let target = document.getElementById(gaugeContainerId); // your canvas element
+            let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+            gauge.minValue = MIN_VALUE;  // Prefer setter over gauge.minValue = 0
+            gauge.maxValue = MAX_VALUE; // set max gauge value
+            const scoreLabel = label;
+            let scoreLabelContainer = $("<div>").addClass("score-label").css("background", colors[level.toLowerCase()]).css("color", fontColors[level.toLowerCase()]);
+            scoreLabelContainer.text(scoreLabel);
+            if (!level) {
+                scoreLabelContainer = $("<div>");
+            }
+            const scoreBlock = $("#" + textContainerId).empty();
+            if (level && score < MAX_VALUE) {
+                scoreBlock.append(scoreLabelContainer);
+            }
+
+            if (score >= MAX_VALUE) {
+                $("#protect-yourself-button").removeClass("hide").css("display", "block");
+            }
+            gauge.set(score.toFixed(1)); // set actual value
+            return gauge;
+        }
+
+        const formatDate = function (dt) {
+            const time = dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' });
+            return (dt.getMonth() + 1) + "." + dt.getDate() + "." + (dt.getFullYear() - 2000) + " " + time;
+        }
+
+        $(document).ready(async function () {
+            const dt = new Date();
+            $("#timestamp").text(formatDate(dt));
+
+            const gaugeContainerId = "chart";
+            const textContainerId = "score-container";
+            createGauge({
+                gaugeContainerId: gaugeContainerId,
+                textContainerId: textContainerId,
+                data: {
+                    score: 0,
+                    label: "",
+                }
+            });
+
+
+            //const url = 'https://script.google.com/macros/s/AKfycbxuywF-UpZaw6bJtmmCD5go8kc4xQNbHopoGraHhoJSh-20B5fOWGnY9t_FF2qwyKKhaA/exec?view=get-live-data';
+            const url = "https://jmolinap.github.io/smla_gauge/LA_data.json?t=" + (+new Date());
+            const response = await fetch(url);
+            if (!response.ok) {
+                return;
+            }
+            const data = await response.json();
+            createGauge({
+                gaugeContainerId,
+                textContainerId,
+                data
+            });
+        });
+    </script>
+</body>
+
+</html>
