@@ -35,7 +35,7 @@
         }
 
         .score-label {
-            font-size: 1.45rem;
+            font-size: 1.1rem;
             padding: 0.5rem 1.5rem 0.5rem 1.5rem;
             border-radius: 10px;
             border: none;
@@ -104,7 +104,7 @@
             let score = data.score;
             let level = data.level || "";
             let languageLabels = data.labels || {};
-            let label = level;
+            let label = data.level_label;
             if (languageLabels) {
                 const searchParams = new URLSearchParams(window.location.search);
                 const lang = searchParams.get("lang");
@@ -198,7 +198,7 @@
 
 
             //const url = 'https://script.google.com/macros/s/AKfycbxuywF-UpZaw6bJtmmCD5go8kc4xQNbHopoGraHhoJSh-20B5fOWGnY9t_FF2qwyKKhaA/exec?view=get-live-data';
-            const url = "https://jmolinap.github.io/smla_gauge/LA_data.json?t=" + (+new Date());
+            const url = "https://jmolinap.github.io/smla_gauge/BB_LA_data.json?t=" + (+new Date());
             const response = await fetch(url);
             if (!response.ok) {
                 return;
