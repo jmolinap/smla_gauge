@@ -71,7 +71,7 @@
             const level = data.level;
             $("#level_label").text(levelLabel);
             if (colors[level]) {
-                $("#level_label").css("background-color", colors[level]);
+                $("#level_label").css("background-color", colors[level]).css("color", fontColors[level]);
             }
             const recommendedActions = data.recommended_actions;
             for (let action of recommendedActions) {
