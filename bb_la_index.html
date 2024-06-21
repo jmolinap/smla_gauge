@@ -86,7 +86,9 @@
     <base target="_top" />
     <div id="preview">
         <div id="timestamp" style="color: black;"></div>
-        <canvas width="275" height="200" id="chart" style="width: 275px; height: 200px;"></canvas>
+        <div style="display: flex; align-content: center;">
+            <canvas width="275" height="200" id="chart" style="width: 275px; height: 200px;"></canvas>
+        </div>
         <div id="preview-textfield">
             <div id="score-container"></div>
             <div>
@@ -148,7 +150,7 @@
                 opts.staticZones = [
                     { strokeStyle: colors.lower, min: 0, max: 2.5, height: 1 },
                     { strokeStyle: colors.moderate, min: 2.51, max: 4, height: 1 },
-                    { strokeStyle: colors.high, min: 4.01, max: 5, height: 1 },
+                    { strokeStyle: colors.high, min: 4.01, max: 4.99, height: 1 },
                 ];
             }
             else {
@@ -166,12 +168,8 @@
                 scoreLabelContainer = $("<div>");
             }
             const scoreBlock = $("#" + textContainerId).empty();
-            if (level && score < MAX_VALUE) {
+            if (level) {
                 scoreBlock.append(scoreLabelContainer);
-            }
-
-            if (score >= MAX_VALUE) {
-                $("#protect-yourself-button").removeClass("hide").css("display", "block");
             }
             gauge.set(score.toFixed(1)); // set actual value
             return gauge;
@@ -188,14 +186,6 @@
 
             const gaugeContainerId = "chart";
             const textContainerId = "score-container";
-            createGauge({
-                gaugeContainerId: gaugeContainerId,
-                textContainerId: textContainerId,
-                data: {
-                    score: 0,
-                    label: "",
-                }
-            });
 
 
             //const url = 'https://script.google.com/macros/s/AKfycbxuywF-UpZaw6bJtmmCD5go8kc4xQNbHopoGraHhoJSh-20B5fOWGnY9t_FF2qwyKKhaA/exec?view=get-live-data';
