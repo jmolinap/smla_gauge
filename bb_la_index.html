@@ -91,11 +91,6 @@
         </div>
         <div id="preview-textfield">
             <div id="score-container"></div>
-            <div>
-                <a id="protect-yourself-button" class="protect-yourself-button hide" target="_top"
-                    href="https://raycheung4.wixsite.com/wildfire/protect" class="protect-yourself">
-                    Protect Yourself</a>
-            </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -161,9 +156,9 @@
             let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
             gauge.minValue = MIN_VALUE;  // Prefer setter over gauge.minValue = 0
             gauge.maxValue = MAX_VALUE; // set max gauge value
-            const scoreLabel = label;
+            const scoreLabel = label.split(" ").map((v, i) => i == 0 ? `<span style='font-weight:600;'>${v}</span><br/>` : v).join(' ');
             let scoreLabelContainer = $("<div>").addClass("score-label").css("background", colors[level.toLowerCase()]).css("color", fontColors[level.toLowerCase()]);
-            scoreLabelContainer.text(scoreLabel);
+            scoreLabelContainer.html(scoreLabel);
             if (!level) {
                 scoreLabelContainer = $("<div>");
             }
