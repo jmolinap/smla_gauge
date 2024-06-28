@@ -54,21 +54,21 @@
     <script>
         const colors = {
             '': '#000',
-            'highest': '#f2ecffff',
-            'high': '#f4ccccff',
-            'moderate': '#fff2ccff',
-            'lower': '#d9ead3ff',
+            'highest': '#890997',
+            'high': '#ff0000',
+            'moderate': '#ffff00',
+            'lower': '#00ff00',
         };
         const fontColors = {
             '': '#000',
-            'highest': '#000',
-            'high': '#000',
+            'highest': '#fff',
+            'high': '#fff',
             'moderate': '#000',
             'lower': '#000',
         };
         const showRecommendations = function ({ data }) {
             const levelLabel = data.level_label;
-            const level = data.level;
+            let level = data.level;
             if (colors[level]) {
                 $("#container").css("background-color", colors[level]).css("color", fontColors[level]);
             }
